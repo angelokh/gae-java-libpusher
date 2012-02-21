@@ -4,29 +4,31 @@
  */
 package ch.mbae.pusher.transport;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import ch.mbae.pusher.PusherChannel;
 import ch.mbae.pusher.PusherCredentials;
 import ch.mbae.pusher.PusherResponse;
 import junit.framework.Assert;
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Tests pushing a an event to pusher by using transport based on jakarta HttpClient.
- * 
+ *
  * @author marcbaechinger
  */
 public class HttpClientPusherTransportTest implements PusherCredentials {
-    
-    private static final Logger LOGGER = Logger.getLogger(HttpClientPusherTransportTest.class);
-    
+
+    private static final Logger LOGGER = Logger.getLogger(HttpClientPusherTransportTest.class.getName());
+
     private static final String JSON_STRING = "{ originator: " + HttpClientPusherTransportTest.class.getName() + "}";
     private static final String SOCKET_ID = "12345678";
     private HttpClientPusherTransport tranportUnderTest;
     private PusherChannel channel;
-    
-    
+
+
     @Before
     public void setUp() {
         // create the transport under test
@@ -40,13 +42,13 @@ public class HttpClientPusherTransportTest implements PusherCredentials {
      */
     @Test
     public void testFetch() throws Exception {
-        // push the event 
+        // push the event
         PusherResponse response = this.channel.pushEvent(EVENT, JSON_STRING);
-        
-        LOGGER.debug(response.getResponseCode());
-        LOGGER.debug(new String(response.getContent()));
-        LOGGER.debug(response.getHeaders().get("Content-Length"));
-        
+
+        LOGGER.log(Level.INFO, Integer.toString(response.getResponseCode()));
+        LOGGER.log(Level.INFO, new String(response.getContent()));
+        LOGGER.log(Level.INFO, response.getHeaders().get("Content-Length"));
+
         // http status 202
         Assert.assertEquals(202, response.getResponseCode());
         // content as expected ? (hard test; might fail once)
@@ -60,13 +62,13 @@ public class HttpClientPusherTransportTest implements PusherCredentials {
      */
     @Test
     public void testFetchWidthSessionId() throws Exception {
-        // push the event 
+        // push the event
         PusherResponse response = this.channel.pushEvent(EVENT, JSON_STRING, SOCKET_ID);
-        
-        LOGGER.debug(response.getResponseCode());
-        LOGGER.debug(new String(response.getContent()));
-        LOGGER.debug(response.getHeaders().get("Content-Length"));
-        
+
+        LOGGER.log(Level.INFO, Integer.toString(response.getResponseCode()));
+        LOGGER.log(Level.INFO, new String(response.getContent()));
+        LOGGER.log(Level.INFO, response.getHeaders().get("Content-Length"));
+
         // http status 202
         Assert.assertEquals(202, response.getResponseCode());
         // content as expected ? (hard test; might fail once)
